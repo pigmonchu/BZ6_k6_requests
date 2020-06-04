@@ -1,9 +1,15 @@
 from tkinter import *
 from tkinter import ttk
+from configparser import *
+
+from PIL import Image, ImageTk
+from io import BytesIO
 
 import requests
 
-APIKEY = "da22215a"
+config = ConfigParser()
+config.read('config.ini')
+APIKEY = config["OMDB_API"]["APIKEY"]
 URL = "http://www.omdbapi.com/?s={}&apikey={}"
 
 class Searcher(ttk.Frame):
@@ -62,7 +68,10 @@ class Film(ttk.Frame):
 
         self.lblTitle = ttk.Label(self, text="Titulo")
         self.lblYear = ttk.Label(self, text="1900")
+        self.image = Label(self)
+        self.photo = None
 
+        self.image.pack(side=TOP)
         self.lblTitle.pack(side=TOP)
         self.lblYear.pack(side=TOP)
 
@@ -76,5 +85,17 @@ class Film(ttk.Frame):
 
         self.lblTitle.config(text=self.__encontrada.get("titulo"))
         self.lblYear.config(text=self.__encontrada.get("anno"))
+
+        if self.__encontrada.get("poster") == "N/A":
+            return
+
+        r = requests.get(self.__encontrada.get("poster"))
+        if r.status_code == 200:
+            bimage = r.content
+            image = Image.open(BytesIO(bimage))
+            self.photo = ImageTk.PhotoImage(image)
+
+            self.image.config(image=self.photo)
+            self.image.image = self.photo
 
 

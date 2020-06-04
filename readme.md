@@ -13,7 +13,7 @@ pip install -r requirements.txt
 
 IMDB API necesita una apikey para las consultas.
 
-Informa el fichero `config_template.ini` y renombralo a `config.ini``
+Informa el fichero `config_template.ini` y renombralo a `config.ini`
 
 ## Ejecutar
 
